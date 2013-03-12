@@ -5,10 +5,10 @@ namespace UnitTests
 {
 	[Tool]
 	[ToolAlias("test-item", AliasScopes.Cli)]
-	public class Class1
+	public class TestArguments1
 	{
 		[ToolConstructor]
-		public Class1(
+		public TestArguments1(
 			[ToolParameterAlias("required-int")]
 			int requiredIntegerParameter)
 		{

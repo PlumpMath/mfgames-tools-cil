@@ -28,6 +28,14 @@ namespace MfGames.Tools.Cli
 		public string LongOptionPrefix { get; set; }
 
 		/// <summary>
+		/// Gets or sets the long assignment separator between a key and value pair.
+		/// If this is null or blank, then no assignment operations will be parsed.
+		/// 
+		/// In POSIX-style mappings, this would be the "=" in "--key=value".
+		/// </summary>
+		public string LongAssignment { get; set; }
+
+		/// <summary>
 		/// Gets or sets the short argument prefix. This is the prefix string that
 		/// identifies a short option from a command-line argument. If this is null
 		/// or blank, then no short arguments will be parsed.
@@ -187,14 +195,41 @@ namespace MfGames.Tools.Cli
 			}
 		}
 
-		private void ProcessLongOption(string option)
+		/// <summary>
+		/// Processes the long option. This already has the prefix characters removed
+		/// but may include either a key/value (key=value) or a simple key (key) value.
+		/// </summary>
+		/// <param name="key">The option.</param>
+		private void ProcessLongOption(string key)
 		{
+			// First figure out if this is a key/value argument or just a key. We
+			// determine this by the presence of the long assignment string.
+			string value = null;
+
+			if (!string.IsNullOrEmpty(LongAssignment))
+			{
+				// Look for the string inside the key string.
+				int assignmentIndex = key.IndexOf(LongAssignment);
+
+				if (assignmentIndex >= 0)
+				{
+					// Split the key into a key/value pair.
+					value = key.Substring(assignmentIndex + 1);
+					key = key.Substring(
+						0,
+						assignmentIndex);
+				}
+			}
+
 			// Check to see if this option is already in the dictionary. If it isn't,
 			// then create an empty list in the options list.
-			if (!options.ContainsKey(option))
+			if (!options.ContainsKey(key))
 			{
-				options[option] = new List<string>();
+				options[key] = new List<string>();
 			}
+
+			// Assign the value in the string.
+			options[key].Add(value);
 		}
 	}
 }

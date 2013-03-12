@@ -22,6 +22,7 @@
 		{
 			StopProcessingOptionsArgument = "--";
 			LongOptionPrefix = "--";
+			LongAssignment = "=";
 			ShortOptionPrefix = "-";
 			AllowShortOptionBundling = true;
 		}
