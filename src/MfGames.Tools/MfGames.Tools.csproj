@@ -39,6 +39,8 @@
     <Compile Include="Cli\ArgumentParser.cs" />
     <Compile Include="Cli\CliToolFactory.cs" />
     <Compile Include="Cli\GetOptLongArgumentParser.cs" />
+    <Compile Include="Cli\OptionHints.cs" />
+    <Compile Include="Cli\OptionHintsCollection.cs" />
     <Compile Include="ICliChainedToolFactory.cs" />
     <Compile Include="ToolAliasAttribute.cs" />
     <Compile Include="ToolAttribute.cs" />

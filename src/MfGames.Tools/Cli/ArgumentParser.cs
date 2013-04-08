@@ -10,8 +10,25 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class ArgumentParser
 	{
+		private readonly OptionHintsCollection optionHints;
 		private Dictionary<string, List<string>> options;
 		private List<string> parameters;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ArgumentParser"/> class.
+		/// </summary>
+		public ArgumentParser()
+		{
+			optionHints = new OptionHintsCollection();
+		}
+
+		/// <summary>
+		/// Gets the option hints for known options.
+		/// </summary>
+		public Dictionary<string, OptionHints> OptionHints
+		{
+			get { return optionHints; }
+		}
 
 		/// <summary>
 		/// Gets or sets the stop processing options argument. If this is encountered
@@ -91,62 +108,6 @@ namespace MfGames.Tools.Cli
 		}
 
 		/// <summary>
-		/// Parses the specified arguments and creates the parameters and options
-		/// based on the settings in this class.
-		/// </summary>
-		/// <param name="arguments">The arguments to parse.</param>
-		public void Parse(string[] arguments)
-		{
-			// Set up the collections we'll be populating.
-			parameters = new List<string>();
-			options = new Dictionary<string, List<string>>();
-
-			// Loop through the arguments one-by-one.
-			bool stopOptionProcessing = false;
-
-			foreach (string argument in arguments)
-			{
-				// If we are done processing options, we don't do anything else.
-				if (!stopOptionProcessing)
-				{
-					// Check for the stop processing argument.
-					if (!string.IsNullOrEmpty(StopProcessingOptionsArgument)
-						&& argument == StopProcessingOptionsArgument)
-					{
-						stopOptionProcessing = true;
-						continue;
-					}
-
-					// Check to see if the argument matches a long argument pattern.
-					string longPrefix = LongOptionPrefix;
-
-					if (!string.IsNullOrEmpty(longPrefix)
-						&& argument.StartsWith(longPrefix))
-					{
-						string option = argument.Substring(longPrefix.Length);
-						ProcessLongOption(option);
-						continue;
-					}
-
-					// Check to see if we have a short option prefix on the argument.
-					string shortPrefix = ShortOptionPrefix;
-
-					if (!string.IsNullOrEmpty(shortPrefix)
-						&& argument.StartsWith(shortPrefix))
-					{
-						string option = argument.Substring(shortPrefix.Length);
-						ProcessShortOption(option);
-						continue;
-					}
-				}
-
-				// If we get this far, then everything is considered a parameter so
-				// add it to the list.
-				parameters.Add(argument);
-			}
-		}
-
-		/// <summary>
 		/// Gets the options from the parsed value.
 		/// </summary>
 		public IDictionary<string, List<string>> Options
@@ -185,14 +146,126 @@ namespace MfGames.Tools.Cli
 			}
 		}
 
-		private void ProcessShortOption(string option)
+		/// <summary>
+		/// Parses the specified arguments and creates the parameters and options
+		/// based on the settings in this class.
+		/// </summary>
+		/// <param name="arguments">The arguments to parse.</param>
+		public void Parse(string[] arguments)
 		{
-			// Check to see if this option is already in the dictionary. If it isn't,
-			// then create an empty list in the options list.
-			if (!options.ContainsKey(option))
+			// Set up the collections we'll be populating.
+			parameters = new List<string>();
+			options = new Dictionary<string, List<string>>();
+
+			// Loop through the arguments one-by-one.
+			bool stopOptionProcessing = false;
+			string optionNeedingParameter = null;
+
+			foreach (string argument in arguments)
 			{
-				options[option] = new List<string>();
+				// If we are done processing options, we don't do anything else.
+				if (!stopOptionProcessing)
+				{
+					// Check for the stop processing argument.
+					if (!string.IsNullOrEmpty(StopProcessingOptionsArgument)
+						&& argument == StopProcessingOptionsArgument)
+					{
+						stopOptionProcessing = true;
+						continue;
+					}
+
+					// Check to see if the argument matches a long argument pattern.
+					string longPrefix = LongOptionPrefix;
+
+					if (!string.IsNullOrEmpty(longPrefix)
+						&& argument.StartsWith(longPrefix))
+					{
+						string option = argument.Substring(longPrefix.Length);
+						ProcessLongOption(option);
+						continue;
+					}
+
+					// Check to see if we have a short option prefix on the argument.
+					string shortPrefix = ShortOptionPrefix;
+
+					if (!string.IsNullOrEmpty(shortPrefix)
+						&& argument.StartsWith(shortPrefix))
+					{
+						string option = argument.Substring(shortPrefix.Length);
+						optionNeedingParameter = ProcessShortOption(option);
+						continue;
+					}
+				}
+
+				// If we have a parameter that needs an option, then add it.
+				if (!string.IsNullOrEmpty(optionNeedingParameter))
+				{
+					options[optionNeedingParameter].Add(argument);
+					continue;
+				}
+
+				// If we get this far, then everything is considered a parameter so
+				// add it to the list.
+				parameters.Add(argument);
 			}
+		}
+
+		private string ProcessShortOption(string option)
+		{
+			// Short options are always a single, case-sensitive character. Normally,
+			// they would be used separately (-a -b), but they can also be combined
+			// into a single one (-ab, also known as bundling). The complexity is when
+			// a single option allows a parameter (-avalue).
+			for (int index = 0;
+				index < option.Length;
+				index++)
+			{
+				// Isolate the option we're including.
+				string shortOption = option[index].ToString();
+
+				// Check to see if this option is already in the dictionary. If it isn't,
+				// then create an empty list in the options list.
+				if (!options.ContainsKey(shortOption))
+				{
+					options[shortOption] = new List<string>();
+				}
+
+				// See if this is a option with a parameter.
+				OptionHints hints = optionHints[shortOption];
+				bool hasRequiredParameter = (hints & Cli.OptionHints.HasRequiredParameter)
+					!= 0;
+
+				// Figure out the value. This will be null if there is no parameter and
+				// the rest of the string if it does.
+				string value = null;
+
+				if (hasRequiredParameter)
+				{
+					// If the required value option is at the end of the string, we need
+					// to swallow the first parameter as the value.
+					if (index == option.Length - 1)
+					{
+						return shortOption;
+					}
+
+					// Since we have remaining characters in the option, use that as a value
+					// instead of grabbing the next parameter.
+					value = option.Substring(index + 1);
+				}
+
+				// Add in the value to the list.
+				options[shortOption].Add(value);
+
+				// If we have a value, then we are done.
+				if (hasRequiredParameter)
+				{
+					break;
+				}
+			}
+
+			// If we get down to here, we have no required options, so we return
+			// null to indicate we aren't stealing the variable.
+			return null;
 		}
 
 		/// <summary>
