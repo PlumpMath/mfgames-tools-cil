@@ -8,12 +8,8 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class CliArgumentReader
 	{
-		private readonly string[] arguments;
+		private string[] arguments;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CliArgumentReader"/> class.
-		/// </summary>
-		/// <param name="arguments">The arguments.</param>
 		public CliArgumentReader(string[] arguments)
 		{
 			// Make sure our input arguments are sane.
@@ -22,7 +18,6 @@ namespace MfGames.Tools.Cli
 				throw new ArgumentNullException("arguments");
 			}
 
-			// Save the arguments and set up the internal states for reading.
 			this.arguments = arguments;
 		}
 
@@ -34,7 +29,7 @@ namespace MfGames.Tools.Cli
 		/// <returns></returns>
 		public bool Read()
 		{
-			throw new NotImplementedException();
+			throw new InvalidOperationException();
 		}
 	}
 }
