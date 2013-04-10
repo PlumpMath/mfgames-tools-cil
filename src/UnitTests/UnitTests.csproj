@@ -47,6 +47,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\MfGames.Tools.Cli\MfGames.Tools.Cli.csproj">
+      <Project>{6adc6112-104b-4dad-ad55-be7ba2a3eba5}</Project>
+      <Name>MfGames.Tools.Cli</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MfGames.Tools\MfGames.Tools.csproj">
       <Project>{154815F4-256F-4C6C-8BAA-09E1B4173886}</Project>
       <Name>MfGames.Tools</Name>

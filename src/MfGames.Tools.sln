@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MfGames.Tools", "MfGames.To
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{837D0DCE-E50C-4D68-BF84-D57FCA73C4B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MfGames.Tools.Cli", "MfGames.Tools.Cli\MfGames.Tools.Cli.csproj", "{6ADC6112-104B-4DAD-AD55-BE7BA2A3EBA5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{837D0DCE-E50C-4D68-BF84-D57FCA73C4B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{837D0DCE-E50C-4D68-BF84-D57FCA73C4B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{837D0DCE-E50C-4D68-BF84-D57FCA73C4B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6ADC6112-104B-4DAD-AD55-BE7BA2A3EBA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6ADC6112-104B-4DAD-AD55-BE7BA2A3EBA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6ADC6112-104B-4DAD-AD55-BE7BA2A3EBA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6ADC6112-104B-4DAD-AD55-BE7BA2A3EBA5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
