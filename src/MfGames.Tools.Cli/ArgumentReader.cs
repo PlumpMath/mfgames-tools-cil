@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using MfGames.Tools.Cli.Reader;
 
 namespace MfGames.Tools.Cli
 {
 	/// <summary>
 	/// A command line interface (CLI) argument parser implemented as a state-based
-	/// reader.
+	/// reader. This is normally used by CliArgumentParser, but can be used directly
+	/// when the order of parameters is imporant, such as how ImageMagick convert
+	/// operates.
 	/// </summary>
-	public class CliArgumentReader
+	public class ArgumentReader
 	{
-		private readonly CliArgumentReaderSettings settings;
+		private readonly ArgumentSettings settings;
 
 		/// <summary>
 		/// Contains the index into arguments array for the current position.
@@ -18,8 +21,8 @@ namespace MfGames.Tools.Cli
 
 		private string[] arguments;
 
-		public CliArgumentReader(
-			CliArgumentReaderSettings settings,
+		public ArgumentReader(
+			ArgumentSettings settings,
 			string[] arguments)
 		{
 			// Make sure our input arguments are sane.
@@ -53,7 +56,7 @@ namespace MfGames.Tools.Cli
 		/// <summary>
 		/// Gets the type of the current argument.
 		/// </summary>
-		public CliArgumentType CliArgumentType { get; private set; }
+		public ReaderArgumentType ReaderArgumentType { get; private set; }
 
 		/// <summary>
 		/// Resets the various fields to a netural state for populating.
@@ -62,7 +65,7 @@ namespace MfGames.Tools.Cli
 		{
 			Key = null;
 			Values = null;
-			CliArgumentType = CliArgumentType.None;
+			ReaderArgumentType = ReaderArgumentType.None;
 		}
 
 		/// <summary>
@@ -141,7 +144,7 @@ namespace MfGames.Tools.Cli
 			}
 
 			// If we got this far, it's a parameter.
-			CliArgumentType = CliArgumentType.Parameter;
+			ReaderArgumentType = ReaderArgumentType.Parameter;
 			Key = argument;
 			nextArgumentIndex++;
 			
@@ -159,14 +162,14 @@ namespace MfGames.Tools.Cli
 			string value)
 		{
 			// Set the argument type to long option.
-			CliArgumentType = CliArgumentType.LongOption;
+			ReaderArgumentType = ReaderArgumentType.LongOption;
 
 			// Set the key value with what's left in the argument.
 			Key = option;
 
 			// Using the key, pull out the definition of the argument. If there is none,
 			// them create a default argument.
-			ICliArgumentReaderArgument definition = settings.Arguments[Key];
+			IReaderArgument definition = settings.Arguments[Key];
 
 			// If the definition requires values, we need to populate them.
 			if (definition.ValueCount > 0)
@@ -206,7 +209,7 @@ namespace MfGames.Tools.Cli
 		private bool ParseShortOption()
 		{
 			// Set the argument type to long option.
-			CliArgumentType = CliArgumentType.ShortOption;
+			ReaderArgumentType = ReaderArgumentType.ShortOption;
 
 			// The first character is the parameter.
 			Key = currentShortOptions[0].ToString();
@@ -216,7 +219,7 @@ namespace MfGames.Tools.Cli
 
 			// Using the key, pull out the definition of the argument. If there is none,
 			// them create a default argument.
-			ICliArgumentReaderArgument definition = settings.Arguments[Key];
+			IReaderArgument definition = settings.Arguments[Key];
 
 			// If the definition requires values, we need to populate them.
 			if (definition.ValueCount > 0)

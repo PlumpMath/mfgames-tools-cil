@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using MfGames.Tools.Cli;
+using MfGames.Tools.Cli.Reader;
 using NUnit.Framework;
 
 namespace UnitTests
 {
 	[TestFixture]
-	public class CliArgumentReaderTests
+	public class ArgumentReaderTests
 	{
 		/// <summary>
 		/// Creates the CLI argument reader with standard arguments set up.
@@ -16,14 +17,14 @@ namespace UnitTests
 		/// </list>
 		/// </summary>
 		/// <param name="arguments">The string arguments.</param>
-		/// <returns>A CliArgumentReader with the arguments set up.</returns>
-		private CliArgumentReader CreateCliArgumentReader(string[] arguments)
+		/// <returns>A ArgumentReader with the arguments set up.</returns>
+		private ArgumentReader CreateCliArgumentReader(string[] arguments)
 		{
 			// Create the initial settings using the Unix-style parameters.
-			var settings = new GetOptLongReaderSettings();
+			var settings = new GetOptArgumentSettings();
 
 			settings.Arguments.Add(
-				new CliArgument
+				new Argument
 				{
 					LongOptionNames = new List<string>
 					{
@@ -36,7 +37,7 @@ namespace UnitTests
 					ValueCount = 1
 				});
 			settings.Arguments.Add(
-				new CliArgument
+				new Argument
 				{
 					LongOptionNames = new List<string>
 					{
@@ -50,7 +51,7 @@ namespace UnitTests
 				});
 
 			// Create the reader and return it.
-			var reader = new CliArgumentReader(
+			var reader = new ArgumentReader(
 				settings,
 				arguments);
 			return reader;
@@ -64,15 +65,15 @@ namespace UnitTests
 			{
 				"-a", "-a"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -87,8 +88,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -112,15 +113,15 @@ namespace UnitTests
 			{
 				"-ab", "param1"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -135,8 +136,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"b",
@@ -151,8 +152,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve third argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -176,15 +177,15 @@ namespace UnitTests
 			{
 				"-atfilename"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -199,8 +200,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"t",
@@ -232,15 +233,15 @@ namespace UnitTests
 			{
 				"-aab"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -255,8 +256,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -271,8 +272,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve third argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"b",
@@ -296,15 +297,15 @@ namespace UnitTests
 			{
 				"-aa"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -319,8 +320,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -344,15 +345,15 @@ namespace UnitTests
 			{
 				"-d", "1", "2"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"d",
@@ -388,15 +389,15 @@ namespace UnitTests
 			{
 				"--dual", "1", "2"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--dual 1 2)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"dual",
@@ -431,7 +432,7 @@ namespace UnitTests
 			var arguments = new string[]
 			{
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Final Act and Assert
 			Assert.IsFalse(
@@ -447,15 +448,15 @@ namespace UnitTests
 			{
 				"--array", "a", "--array=b"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--array a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"array",
@@ -478,8 +479,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"array",
@@ -511,15 +512,15 @@ namespace UnitTests
 			{
 				"--opt1", "--dual", "1", "2", "param1"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--opt)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"opt1",
@@ -534,8 +535,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"dual",
@@ -562,8 +563,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve third argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -587,15 +588,15 @@ namespace UnitTests
 			{
 				"--opt1", "param1", "--dual", "1", "2", "param2"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--opt)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"opt1",
@@ -610,8 +611,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -626,8 +627,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve third argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"dual",
@@ -654,8 +655,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve fourth argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Fourth argument's type was not expected.");
 			Assert.AreEqual(
 				"param2",
@@ -679,15 +680,15 @@ namespace UnitTests
 			{
 				"--array", "a", "--", "--array=b"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--array a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not a long option.");
 			Assert.AreEqual(
 				"array",
@@ -710,8 +711,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Second argument's type was not a parameter.");
 			Assert.AreEqual(
 				"--array=b",
@@ -735,15 +736,15 @@ namespace UnitTests
 			{
 				"--array", "value"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--array value)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"array",
@@ -775,15 +776,15 @@ namespace UnitTests
 			{
 				"--array=value"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--array=value)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"array",
@@ -815,15 +816,15 @@ namespace UnitTests
 			{
 				"param1", "-ab"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (param1)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -838,8 +839,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -854,8 +855,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve third argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"b",
@@ -879,15 +880,15 @@ namespace UnitTests
 			{
 				"param1", "-a", "-b"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (param1)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -902,8 +903,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -918,8 +919,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve third argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"b",
@@ -943,15 +944,15 @@ namespace UnitTests
 			{
 				"param1", "-a"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (param1)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -966,8 +967,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -991,15 +992,15 @@ namespace UnitTests
 			{
 				"-a", "param1"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -1014,8 +1015,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -1039,15 +1040,15 @@ namespace UnitTests
 			{
 				"-t", "a", "-t", "b"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-t a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"t",
@@ -1070,8 +1071,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"t",
@@ -1103,15 +1104,15 @@ namespace UnitTests
 			{
 				"-ab"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -1126,8 +1127,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"b",
@@ -1151,15 +1152,15 @@ namespace UnitTests
 			{
 				"-a", "param1", "-b"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -1174,8 +1175,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -1190,8 +1191,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve third argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"b",
@@ -1215,15 +1216,15 @@ namespace UnitTests
 			{
 				"-t", "filename"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--array a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"t",
@@ -1255,15 +1256,15 @@ namespace UnitTests
 			{
 				"-tfilename"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-vfilename)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"t",
@@ -1295,15 +1296,15 @@ namespace UnitTests
 			{
 				""
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--opt1)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"",
@@ -1327,15 +1328,15 @@ namespace UnitTests
 			{
 				"--opt1"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--opt1)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"opt1",
@@ -1359,15 +1360,15 @@ namespace UnitTests
 			{
 				"param1"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--opt1)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -1391,15 +1392,15 @@ namespace UnitTests
 			{
 				"-a"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -1423,15 +1424,15 @@ namespace UnitTests
 			{
 				"--opt1", "--opt2"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--opt1)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"opt1",
@@ -1446,8 +1447,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.LongOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.LongOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"opt2",
@@ -1471,15 +1472,15 @@ namespace UnitTests
 			{
 				"param1", "param2"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (--opt1)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
@@ -1494,8 +1495,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"param2",
@@ -1519,15 +1520,15 @@ namespace UnitTests
 			{
 				"-a", "-b"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -1542,8 +1543,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"b",
@@ -1567,15 +1568,15 @@ namespace UnitTests
 			{
 				"-a", "-b", "param1"
 			};
-			CliArgumentReader reader = CreateCliArgumentReader(arguments);
+			ArgumentReader reader = CreateCliArgumentReader(arguments);
 
 			// Act and Assert - Argument 1 (-a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"First argument's type was not expected.");
 			Assert.AreEqual(
 				"a",
@@ -1590,8 +1591,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve second argument.");
 			Assert.AreEqual(
-				CliArgumentType.ShortOption,
-				reader.CliArgumentType,
+				ReaderArgumentType.ShortOption,
+				reader.ReaderArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
 				"b",
@@ -1606,8 +1607,8 @@ namespace UnitTests
 				reader.Read(),
 				"Could not retrieve third argument.");
 			Assert.AreEqual(
-				CliArgumentType.Parameter,
-				reader.CliArgumentType,
+				ReaderArgumentType.Parameter,
+				reader.ReaderArgumentType,
 				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",

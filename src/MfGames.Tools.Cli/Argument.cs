@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using MfGames.Tools.Cli.Reader;
 
 namespace MfGames.Tools.Cli
 {
 	/// <summary>
 	/// Describes a single argument that can be processed or read.
 	/// </summary>
-	public class CliArgument: ICliArgumentReaderArgument
+	public class Argument: IReaderArgument
 	{
 		public int ValueCount { get; set; }
 		public bool HasOptionalValues { get; set; }

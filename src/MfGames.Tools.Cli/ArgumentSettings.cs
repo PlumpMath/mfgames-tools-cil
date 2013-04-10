@@ -1,4 +1,5 @@
 ﻿using System;
+using MfGames.Tools.Cli.Reader;
 
 namespace MfGames.Tools.Cli
 {
@@ -10,14 +11,14 @@ namespace MfGames.Tools.Cli
 	/// Hints are provided to determine if an argument has values of their own, such
 	/// as "--key=value" or "-k value".
 	/// </summary>
-	public class CliArgumentReaderSettings
+	public class ArgumentSettings
 	{
 		/// <summary>
-		/// Prevents a default instance of the <see cref="CliArgumentReaderSettings"/> class from being created.
+		/// Prevents a default instance of the <see cref="ArgumentSettings"/> class from being created.
 		/// </summary>
-		public CliArgumentReaderSettings()
+		public ArgumentSettings()
 		{
-			Arguments = new CliArgumentReaderArgumentCollection();
+			Arguments = new ReaderArgumentCollection();
 		}
 
 		/// <summary>
@@ -32,7 +33,7 @@ namespace MfGames.Tools.Cli
 		/// <summary>
 		/// Gets the specific argument settings.
 		/// </summary>
-		public CliArgumentReaderArgumentCollection Arguments { get; private set; }
+		public ReaderArgumentCollection Arguments { get; private set; }
 
 		/// <summary>
 		/// Gets a value indicating whether these settings allow for long options.

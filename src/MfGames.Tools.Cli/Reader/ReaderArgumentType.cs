@@ -1,9 +1,9 @@
-﻿namespace MfGames.Tools.Cli
+﻿namespace MfGames.Tools.Cli.Reader
 {
 	/// <summary>
 	/// Enumeration that describes the current type of argument in the reader.
 	/// </summary>
-	public enum CliArgumentType
+	public enum ReaderArgumentType
 	{
 		/// <summary>
 		/// Indicates an unknown state or end of argument processing.

@@ -21,12 +21,12 @@
 	/// argument allows for singular or multiple values, if it is considered a short or long argument,
 	/// and if it is counted.
 	/// </summary>
-	public class GetOptLongReaderSettings : CliArgumentReaderSettings
+	public class GetOptArgumentSettings : ArgumentSettings
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="GetOptLongReaderSettings"/> class.
+		/// Initializes a new instance of the <see cref="GetOptArgumentSettings"/> class.
 		/// </summary>
-		public GetOptLongReaderSettings()
+		public GetOptArgumentSettings()
 		{
 			// Normal processing.
 			StopProcessingArgument = "--";

@@ -39,15 +39,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
-    <Compile Include="CliArgument.cs" />
-    <Compile Include="CliArgumentHints.cs" />
-    <Compile Include="CliArgumentReader.cs" />
-    <Compile Include="CliArgumentReaderArgumentCollection.cs" />
-    <Compile Include="CliArgumentReaderSettings.cs" />
-    <Compile Include="CliArgumentType.cs" />
-    <Compile Include="GetOptLongReaderSettings.cs" />
-    <Compile Include="ICliArgumentReaderArgument.cs" />
+    <Compile Include="Argument.cs" />
+    <Compile Include="ArgumentReader.cs" />
+    <Compile Include="Reader\ReaderArgumentCollection.cs" />
+    <Compile Include="ArgumentSettings.cs" />
+    <Compile Include="Reader\ReaderArgumentType.cs" />
+    <Compile Include="GetOptArgumentSettings.cs" />
+    <Compile Include="Reader\IReaderArgument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

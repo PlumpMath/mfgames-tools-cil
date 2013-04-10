@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace MfGames.Tools.Cli
+namespace MfGames.Tools.Cli.Reader
 {
 	/// <summary>
-	/// Defines the common interfaces for arguments parsed by the CliArgumentReader.
+	/// Defines the common interfaces for arguments parsed by the ArgumentReader.
 	/// </summary>
-	public interface ICliArgumentReaderArgument
+	public interface IReaderArgument
 	{
 		/// <summary>
 		/// Gets the number of values the argument requires.
