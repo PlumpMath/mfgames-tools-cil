@@ -33,6 +33,7 @@
 
 			// Set up long options.
 			LongOptionPrefix = "--";
+			LongOptionAssignment = "=";
 
 			// Set up short options.
 			AllowShortOptionBundling = true;

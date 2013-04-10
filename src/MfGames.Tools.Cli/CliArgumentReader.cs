@@ -109,7 +109,10 @@ namespace MfGames.Tools.Cli
 				}
 
 				// Check to see if we have a long option.
-				string longOption = settings.GetLongOption(argument);
+				string longOption;
+				string longValue;
+
+				settings.GetLongOption(argument, out longOption, out longValue);
 
 				if (longOption != null)
 				{
@@ -118,7 +121,7 @@ namespace MfGames.Tools.Cli
 
 					// Populate the internal state of the long option. This can
 					// potentially advance the nextArgumentIndex further.
-					bool results = ParseLongOption(longOption);
+					bool results = ParseLongOption(longOption, longValue);
 					return results;
 				}
 
@@ -148,15 +151,18 @@ namespace MfGames.Tools.Cli
 		/// <summary>
 		/// Parses the argument as a long option.
 		/// </summary>
-		/// <param name="argument">The argument.</param>
+		/// <param name="option">The argument.</param>
+		/// <param name="valuealue"></param>
 		/// <returns>True if successfull parsed, otherwise false.</returns>
-		private bool ParseLongOption(string argument)
+		private bool ParseLongOption(
+			string option,
+			string value)
 		{
 			// Set the argument type to long option.
 			CliArgumentType = CliArgumentType.LongOption;
 
 			// Set the key value with what's left in the argument.
-			Key = argument;
+			Key = option;
 
 			// Using the key, pull out the definition of the argument. If there is none,
 			// them create a default argument.
@@ -166,15 +172,22 @@ namespace MfGames.Tools.Cli
 			if (definition.ValueCount > 0)
 			{
 				// Populate the list of values.
-				Values = new List<string>();
-
-				// If we have a required parameter, we need to pull elements down.
 				int missingValues = definition.ValueCount;
 
+				Values = new List<string>();
+
+				// If we have a value, we use that.
+				if (!string.IsNullOrEmpty(value))
+				{
+					Values.Add(value);
+					missingValues--;
+				}
+
+				// If we still have a required parameter, we need to pull elements down.
 				while (missingValues > 0)
 				{
-					string value = GetNextArgument();
-					Values.Add(value);
+					string nextValue = GetNextArgument();
+					Values.Add(nextValue);
 					nextArgumentIndex++;
 					missingValues--;
 				}
@@ -223,17 +236,11 @@ namespace MfGames.Tools.Cli
 				}
 
 				// If we have a required parameter, we need to pull elements down.
-				if (missingValues > 0)
-				{
-					// We need to move to the next element first.
-					nextArgumentIndex++;
-				}
-
 				while (missingValues > 0)
 				{
+					nextArgumentIndex++;
 					string value = GetNextArgument();
 					Values.Add(value);
-					nextArgumentIndex++;
 					missingValues--;
 				}
 			}

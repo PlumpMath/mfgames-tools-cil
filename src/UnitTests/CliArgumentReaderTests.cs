@@ -797,7 +797,7 @@ namespace UnitTests
 				reader.Values.Count,
 				"First argument's value count is not expected.");
 			Assert.AreEqual(
-				"a",
+				"value",
 				reader.Values[0],
 				"First argument's first value is not expected.");
 
@@ -1041,7 +1041,7 @@ namespace UnitTests
 			};
 			CliArgumentReader reader = CreateCliArgumentReader(arguments);
 
-			// Act and Assert - Argument 1 (--array a)
+			// Act and Assert - Argument 1 (-t a)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
@@ -1065,7 +1065,7 @@ namespace UnitTests
 				reader.Values[0],
 				"First argument's first value is not expected.");
 
-			// Act and Assert - Argument 2 (--array=b)
+			// Act and Assert - Argument 2 (-t b)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve second argument.");

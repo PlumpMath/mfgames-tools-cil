@@ -1,4 +1,6 @@
-﻿namespace MfGames.Tools.Cli
+﻿using System;
+
+namespace MfGames.Tools.Cli
 {
 	/// <summary>
 	/// Contains the various controls to describe how CLI arguments are parsed. This is
@@ -44,11 +46,17 @@
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether these settings allow for long option
+		/// assignment.
+		/// </summary>
+		public bool HasLongOptionAssignment
+		{
+			get { return !string.IsNullOrEmpty(LongOptionAssignment); }
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether these settings allow for short options.
 		/// </summary>
-		/// <value>
-		/// <c>true</c> if this instance has short options; otherwise, <c>false</c>.
-		/// </value>
 		public bool HasShortOptions
 		{
 			get { return !string.IsNullOrEmpty(ShortOptionPrefix); }
@@ -65,7 +73,13 @@
 		/// <summary>
 		/// Gets or sets the prefix string which indicates a long option.
 		/// </summary>
-		protected string LongOptionPrefix { get; set; }
+		public string LongOptionPrefix { get; set; }
+
+		/// <summary>
+		/// Gets or sets the long option assignment string, this is what identifies an
+		/// assignment operator.
+		/// </summary>
+		public string LongOptionAssignment { get; set; }
 
 		/// <summary>
 		/// Gets or sets the prefix string which indicates a short option.
@@ -78,25 +92,52 @@
 		/// but including assignment (e.g., "assets=bob").
 		/// </summary>
 		/// <param name="argument">The argument to test.</param>
-		/// <returns>Either the parsed option or null to indicate it isn't parsable.</returns>
-		public string GetLongOption(string argument)
+		/// <param name="option">The long option parsed from the argument.</param>
+		/// <param name="value">The value parsed from the argument or null.</param>
+		public bool GetLongOption(
+			string argument,
+			out string option,
+			out string value)
 		{
 			// If we don't have long options, then we don't do anything.
 			if (!HasLongOptions)
 			{
-				return null;
+				option = null;
+				value = null;
+				return false;
 			}
 
 			// We have a long option, but if the argument doesn't match start with it,
 			// then we skip it.
 			if (!argument.StartsWith(LongOptionPrefix))
 			{
-				return null;
+				option = null;
+				value = null;
+				return false;
 			}
 
-			// Pull out the prefix string.
-			string value = argument.Substring(LongOptionPrefix.Length);
-			return value;
+			// Pull out the prefix string from the value.
+			option = argument.Substring(LongOptionPrefix.Length);
+			value = null;
+
+			// Check to see if the long option assignment operator.
+			if (HasLongOptionAssignment)
+			{
+				int operatorIndex = option.IndexOf(
+					LongOptionAssignment,
+					StringComparison.InvariantCulture);
+
+				if (operatorIndex > 0)
+				{
+					value = option.Substring(operatorIndex + 1);
+					option = option.Substring(
+						0,
+						operatorIndex);
+				}
+			}
+
+			// Return that we were successful in finding a long value.
+			return true;
 		}
 
 		/// <summary>
