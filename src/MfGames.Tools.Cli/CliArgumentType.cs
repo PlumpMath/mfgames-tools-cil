@@ -16,8 +16,13 @@
 		Parameter,
 
 		/// <summary>
-		/// Indicates an optional argument.
+		/// Indicates a description optional argument.
 		/// </summary>
 		LongOption,
+
+		/// <summary>
+		/// Indicates a single-character optional argument that can be bundled.
+		/// </summary>
+		ShortOption,
 	}
 }
