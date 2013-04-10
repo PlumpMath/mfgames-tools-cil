@@ -28,7 +28,11 @@
 		/// </summary>
 		public GetOptLongReaderSettings()
 		{
+			// Normal processing.
 			StopProcessingArgument = "--";
+
+			// Long options.
+			LongOptionPrefix = "--";
 		}
 	}
 }

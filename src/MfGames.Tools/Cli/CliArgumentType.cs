@@ -18,6 +18,6 @@
 		/// <summary>
 		/// Indicates an optional argument.
 		/// </summary>
-		Optional,
+		LongOption,
 	}
 }

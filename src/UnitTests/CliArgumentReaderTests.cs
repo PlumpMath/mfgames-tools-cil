@@ -1,4 +1,5 @@
-﻿using MfGames.Tools.Cli;
+﻿using System.Collections.Generic;
+using MfGames.Tools.Cli;
 using NUnit.Framework;
 
 namespace UnitTests
@@ -8,7 +9,25 @@ namespace UnitTests
 	{
 		private CliArgumentReader CreateCliArgumentReader(string[] arguments)
 		{
-			var reader = new CliArgumentReader(arguments);
+			// Create the initial settings using the Unix-style parameters.
+			var settings = new GetOptLongReaderSettings();
+
+			settings.Arguments.Add(
+				new CliArgument()
+				{
+					LongOptionNames = new List<string>()
+					{
+						"array"
+					},
+					ShortOptionNames = new List<string>()
+					{
+						"a"
+					},
+					ValueCount = 1
+				});
+
+			// Create the reader and return it.
+			var reader = new CliArgumentReader(settings, arguments);
 			return reader;
 		}
 
@@ -157,14 +176,50 @@ namespace UnitTests
 			};
 			CliArgumentReader reader = CreateCliArgumentReader(arguments);
 
-			// Act and Assert
-			//bool successful = reader.Read();
-			//Assert.IsTrue(successful);
-			//reader.ArgumentType == Optional
+			// Act and Assert - Argument 1 (--array a)
+			Assert.IsTrue(
+				reader.Read(),
+				"Could not retrieve first argument.");
+			Assert.AreEqual(
+				CliArgumentType.LongOption,
+				reader.CliArgumentType,
+				"First argument's type was not a long option.");
+			Assert.AreEqual(
+				"array",
+				reader.Key,
+				"First argument's key was not array.");
+			Assert.IsNotNull(
+				reader.Values,
+				"First argument's did not have values.");
+			Assert.AreEqual(
+				1,
+				reader.Values.Count,
+				"First argument's did not have exactly one value.");
+			Assert.AreEqual(
+				"a",
+				reader.Values[0],
+				"First argument's value was not 'a'.");
 
-			//successful = reader.Read();
-			//Assert.IsTrue(successful);
-			//reader.ArgumentType == Parameter
+			// Act and Assert - Argument 2 (--array=b)
+			Assert.IsTrue(
+				reader.Read(),
+				"Could not retrieve second argument.");
+			Assert.AreEqual(
+				CliArgumentType.Parameter,
+				reader.CliArgumentType,
+				"Second argument's type was not a parameter.");
+			Assert.AreEqual(
+				"--array=b",
+				reader.Key,
+				"Second argument's key was not array.");
+			Assert.IsNull(
+				reader.Values,
+				"Second argument's had values.");
+
+			// Act and Assert
+			Assert.IsFalse(
+				reader.Read(),
+				"Retrieved argument when there should be no more.");
 		}
 
 		[Test]

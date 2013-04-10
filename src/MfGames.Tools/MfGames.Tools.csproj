@@ -40,11 +40,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AliasScopes.cs" />
+    <Compile Include="Cli\CliArgument.cs" />
     <Compile Include="Cli\CliArgumentHints.cs" />
     <Compile Include="Cli\CliArgumentReader.cs" />
+    <Compile Include="Cli\CliArgumentReaderArgumentCollection.cs" />
     <Compile Include="Cli\CliArgumentReaderSettings.cs" />
     <Compile Include="Cli\CliArgumentType.cs" />
     <Compile Include="Cli\GetOptLongReaderSettings.cs" />
+    <Compile Include="Cli\ICliArgumentReaderArgument.cs" />
     <Compile Include="ICliChainedToolFactory.cs" />
     <Compile Include="ToolAliasAttribute.cs" />
     <Compile Include="ToolAttribute.cs" />
