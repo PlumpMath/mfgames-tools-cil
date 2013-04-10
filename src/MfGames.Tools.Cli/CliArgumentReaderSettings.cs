@@ -27,6 +27,9 @@
 		/// </summary>
 		public string StopProcessingArgument { get; set; }
 
+		/// <summary>
+		/// Gets the specific argument settings.
+		/// </summary>
 		public CliArgumentReaderArgumentCollection Arguments { get; private set; }
 
 		/// <summary>
@@ -41,9 +44,33 @@
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether these settings allow for short options.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance has short options; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasShortOptions
+		{
+			get { return !string.IsNullOrEmpty(ShortOptionPrefix); }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether short options can be bundled together.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if short options can be bundled; otherwise, <c>false</c>.
+		/// </value>
+		public bool AllowShortOptionBundling { get; set; }
+
+		/// <summary>
 		/// Gets or sets the prefix string which indicates a long option.
 		/// </summary>
 		protected string LongOptionPrefix { get; set; }
+
+		/// <summary>
+		/// Gets or sets the prefix string which indicates a short option.
+		/// </summary>
+		protected string ShortOptionPrefix { get; set; }
 
 		/// <summary>
 		/// Parses the argument as a long option. If this is not a valid string, this
@@ -69,6 +96,33 @@
 
 			// Pull out the prefix string.
 			string value = argument.Substring(LongOptionPrefix.Length);
+			return value;
+		}
+
+		/// <summary>
+		/// Parses the argument as a short option bundle. If this is not a valid string, this
+		/// returns null. Otherwise, it returns the short option bundle without any option prefix
+		/// but including assignment (e.g., "avfilename").
+		/// </summary>
+		/// <param name="argument">The argument to test.</param>
+		/// <returns>Either the parsed option or null to indicate it isn't parsable.</returns>
+		public string GetShortOptions(string argument)
+		{
+			// If we don't have short options, then we don't do anything.
+			if (!HasShortOptions)
+			{
+				return null;
+			}
+
+			// We have a long option, but if the argument doesn't match start with it,
+			// then we skip it.
+			if (!argument.StartsWith(ShortOptionPrefix))
+			{
+				return null;
+			}
+
+			// Pull out the prefix string.
+			string value = argument.Substring(ShortOptionPrefix.Length);
 			return value;
 		}
 

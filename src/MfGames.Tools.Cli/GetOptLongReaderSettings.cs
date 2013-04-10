@@ -31,8 +31,12 @@
 			// Normal processing.
 			StopProcessingArgument = "--";
 
-			// Long options.
+			// Set up long options.
 			LongOptionPrefix = "--";
+
+			// Set up short options.
+			AllowShortOptionBundling = true;
+			ShortOptionPrefix = "-";
 		}
 	}
 }

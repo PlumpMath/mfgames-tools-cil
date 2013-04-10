@@ -76,6 +76,13 @@ namespace MfGames.Tools.Cli
 			// We always reset our internal state before processing.
 			Reset();
 
+			// If we have short options, then process those instead.
+			if (!string.IsNullOrEmpty(currentShortOptions))
+			{
+				bool results = ParseShortOption();
+				return results;
+			}
+
 			// Figure out which argument we'll be processing. If this returns null, then
 			// we have nothing else to retrieve.
 			string argument = GetNextArgument();
@@ -112,6 +119,20 @@ namespace MfGames.Tools.Cli
 					// Populate the internal state of the long option. This can
 					// potentially advance the nextArgumentIndex further.
 					bool results = ParseLongOption(longOption);
+					return results;
+				}
+
+				// Check to see if we have a short option.
+				string shortOptions = settings.GetShortOptions(argument);
+
+				if (shortOptions != null)
+				{
+					// Set the short options in the parser.
+					currentShortOptions = shortOptions;
+
+					// Populate the internal state of the long option. This can
+					// potentially advance the nextArgumentIndex further.
+					bool results = ParseShortOption();
 					return results;
 				}
 			}
@@ -164,6 +185,71 @@ namespace MfGames.Tools.Cli
 		}
 
 		/// <summary>
+		/// Parses the argument as a short option bundle.
+		/// </summary>
+		/// <returns>
+		/// True if successfull parsed, otherwise false.
+		/// </returns>
+		private bool ParseShortOption()
+		{
+			// Set the argument type to long option.
+			CliArgumentType = CliArgumentType.ShortOption;
+
+			// The first character is the parameter.
+			Key = currentShortOptions[0].ToString();
+
+			// Trim off the character we just put into the key.
+			currentShortOptions = currentShortOptions.Substring(1);
+
+			// Using the key, pull out the definition of the argument. If there is none,
+			// them create a default argument.
+			ICliArgumentReaderArgument definition = settings.Arguments[Key];
+
+			// If the definition requires values, we need to populate them.
+			if (definition.ValueCount > 0)
+			{
+				// Populate the list of values.
+				Values = new List<string>();
+
+				// Figure out how many values we need.
+				int missingValues = definition.ValueCount;
+
+				// If we have values and there is still a currentShortOptions, pull it off.
+				if (missingValues > 0 && !string.IsNullOrEmpty(currentShortOptions))
+				{
+					Values.Add(currentShortOptions);
+					missingValues--;
+					currentShortOptions = "";
+				}
+
+				// If we have a required parameter, we need to pull elements down.
+				if (missingValues > 0)
+				{
+					// We need to move to the next element first.
+					nextArgumentIndex++;
+				}
+
+				while (missingValues > 0)
+				{
+					string value = GetNextArgument();
+					Values.Add(value);
+					nextArgumentIndex++;
+					missingValues--;
+				}
+			}
+
+			// If we got this far and we don't have any more short options, we move
+			// to the next line.
+			if (string.IsNullOrEmpty(currentShortOptions))
+			{
+				nextArgumentIndex++;
+			}
+
+			// Indicate that we successfully parsed it.
+			return true;
+		}
+
+		/// <summary>
 		/// Gets the next argument.
 		/// </summary>
 		/// <returns></returns>
@@ -187,5 +273,10 @@ namespace MfGames.Tools.Cli
 		/// If this is set, then option processing will be suspended.
 		/// </summary>
 		private bool stopProcessing;
+
+		/// <summary>
+		/// The short options currently being processed.
+		/// </summary>
+		private string currentShortOptions;
 	}
 }

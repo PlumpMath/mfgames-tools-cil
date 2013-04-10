@@ -11,7 +11,7 @@ namespace UnitTests
 		/// Creates the CLI argument reader with standard arguments set up.
 		/// 
 		/// <list type="bullet">
-		/// <item>-a, --array: Takes a single value</item>
+		/// <item>-t, --array: Takes a single value</item>
 		/// <item>-d, --dual: Takes two values</item>
 		/// </list>
 		/// </summary>
@@ -31,7 +31,7 @@ namespace UnitTests
 					},
 					ShortOptionNames = new List<string>
 					{
-						"a"
+						"t"
 					},
 					ValueCount = 1
 				});
@@ -174,7 +174,7 @@ namespace UnitTests
 			// Arrange
 			var arguments = new[]
 			{
-				"-affilename"
+				"-atfilename"
 			};
 			CliArgumentReader reader = CreateCliArgumentReader(arguments);
 
@@ -203,7 +203,7 @@ namespace UnitTests
 				reader.CliArgumentType,
 				"Second argument's type was not expected.");
 			Assert.AreEqual(
-				"f",
+				"t",
 				reader.Key,
 				"Second argument's key was not expected.");
 			Assert.IsNotNull(
@@ -1253,11 +1253,11 @@ namespace UnitTests
 			// Arrange
 			var arguments = new[]
 			{
-				"-vfilename"
+				"-tfilename"
 			};
 			CliArgumentReader reader = CreateCliArgumentReader(arguments);
 
-			// Act and Assert - Argument 1 (--array a)
+			// Act and Assert - Argument 1 (-vfilename)
 			Assert.IsTrue(
 				reader.Read(),
 				"Could not retrieve first argument.");
