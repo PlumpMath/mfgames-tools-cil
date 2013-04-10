@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgumentParserTests.cs" />
+    <Compile Include="ArgumentTestBase.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="ArgumentReaderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

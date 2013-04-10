@@ -8,6 +8,7 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class Argument: IReaderArgument
 	{
+		public string Key { get; set; }
 		public int ValueCount { get; set; }
 		public bool HasOptionalValues { get; set; }
 		public ICollection<string> LongOptionNames { get; set; }
