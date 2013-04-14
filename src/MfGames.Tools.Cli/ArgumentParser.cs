@@ -109,7 +109,7 @@ namespace MfGames.Tools.Cli
 			bool found = optionals.TryGetValue(
 				argument.Key,
 				out reference);
-			
+
 			if (!found)
 			{
 				// We couldn't find it, so create a new one.
@@ -120,7 +120,12 @@ namespace MfGames.Tools.Cli
 			// Increment the reference counter.
 			reference.ReferenceCount++;
 
-			// Check to see if we have a parameter associated with this argument.
+			// Check to see if we have a value associated with this argument.
+			if (reader.Values != null)
+			{
+				// Add the values to the reference.
+				reference.AddValues(reader.Values);
+			}
 		}
 
 
