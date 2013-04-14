@@ -7,12 +7,12 @@
 	/// </summary>
 	public class ArgumentReference
 	{
-		public ArgumentReference(string key)
+		public ArgumentReference(Argument argument)
 		{
-			Key = key;
+			Argument = argument;
 		}
 
-		public string Key { get; private set; }
+		public Argument Argument { get; private set; }
 		public int ReferenceCount { get; set; }
 	}
 }

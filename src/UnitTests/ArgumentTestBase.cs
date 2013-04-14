@@ -30,6 +30,19 @@ namespace UnitTests
 			settings.Arguments.Add(
 				new Argument
 				{
+					Key = "Option 2",
+					LongOptionNames = new List<string>
+					{
+						"opt2"
+					},
+					ShortOptionNames = new List<string>
+					{
+						"b"
+					}
+				});
+			settings.Arguments.Add(
+				new Argument
+				{
 					Key = "Array",
 					LongOptionNames = new List<string>
 					{

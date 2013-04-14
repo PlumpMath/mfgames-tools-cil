@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace UnitTests
 {
 	[TestFixture]
-	public class ArgumentParserTests : ArgumentTestBase
+	public class ArgumentParserTests: ArgumentTestBase
 	{
 		/// <summary>
 		/// Creates the CLI argument reader with standard arguments set up.
@@ -47,7 +47,7 @@ namespace UnitTests
 				1,
 				parser.OptionalCount,
 				"There were an unexpected number of optional arguments.");
-			
+
 			Assert.IsTrue(
 				parser.Optionals.ContainsKey("Option 1"),
 				"Could not find Option 1 argument.");
@@ -179,6 +179,7 @@ namespace UnitTests
 				reader.Read(),
 				"Retrieved argument when there should be no more.");
 		}
+#endif
 
 		[Test]
 		public void ParseCountedShortBundledWithNonCounted()
@@ -188,60 +189,37 @@ namespace UnitTests
 			{
 				"-aab"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (-a)
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				2,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+				2,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 
-			// Act and Assert - Argument 2 (-a)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+				parser.Optionals.ContainsKey("Option 2"),
+				"Could not find Option 2 argument.");
+			ArgumentReference option2 = parser.Optionals["Option 2"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"Second argument's had values.");
-
-			// Act and Assert - Argument 3 (param1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve third argument.");
-			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Third argument's type was not expected.");
-			Assert.AreEqual(
-				"b",
-				reader.Key,
-				"Third argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"Third argument values was not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option2.ReferenceCount,
+				"'Option 2' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -252,46 +230,32 @@ namespace UnitTests
 			{
 				"-aa"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (-a)
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				1,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
-			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
 
-			// Act and Assert - Argument 2 (-a)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"Second argument's had values.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				2,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 		}
 
+#if NOT_UPDATED
 		[Test]
 		public void ParseDoubleArgumentShort()
 		{
@@ -379,6 +343,7 @@ namespace UnitTests
 				reader.Read(),
 				"Retrieved argument when there should be no more.");
 		}
+#endif
 
 		[Test]
 		public void ParseEmptyArguments()
@@ -387,14 +352,22 @@ namespace UnitTests
 			var arguments = new string[]
 			{
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				0,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
 		}
 
+#if NOT_IMPLEMENTED
 		[Test]
 		public void ParseLongArrayValues()
 		{
@@ -403,62 +376,23 @@ namespace UnitTests
 			{
 				"--array", "a", "--array=b"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (--array a)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
-			Assert.AreEqual(
-				ReaderArgumentType.LongOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"array",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNotNull(
-				reader.Values,
-				"First argument's did not had values.");
-			Assert.AreEqual(
-				1,
-				reader.Values.Count,
-				"First argument's value count is not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Values[0],
-				"First argument's first value is not expected.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
 
-			// Act and Assert - Argument 2 (--array=b)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.LongOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
 			Assert.AreEqual(
-				"array",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNotNull(
-				reader.Values,
-				"Second argument's did not had values.");
-			Assert.AreEqual(
-				1,
-				reader.Values.Count,
-				"Second argument's value count is not expected.");
-			Assert.AreEqual(
-				"b",
-				reader.Values[0],
-				"Second argument's first value is not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				0,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
 		}
+#endif
 
+#if NOT_IMPLEMENTED
 		[Test]
 		public void ParseLongDualLongParameter()
 		{
@@ -762,6 +696,7 @@ namespace UnitTests
 				reader.Read(),
 				"Retrieved argument when there should be no more.");
 		}
+#endif
 
 		[Test]
 		public void ParseParamWithBundledShort()
@@ -771,60 +706,42 @@ namespace UnitTests
 			{
 				"param1", "-ab"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (param1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
+				1,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				2,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.AreEqual(
 				"param1",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 
-			// Act and Assert - Argument 2 (-a)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 
-			// Act and Assert - Argument 3 (-b)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve third argument.");
+				parser.Optionals.ContainsKey("Option 2"),
+				"Could not find Option 2 argument.");
+			ArgumentReference option2 = parser.Optionals["Option 2"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Third argument's type was not expected.");
-			Assert.AreEqual(
-				"b",
-				reader.Key,
-				"Third argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"Third argument values was not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option2.ReferenceCount,
+				"'Option 2' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -835,60 +752,42 @@ namespace UnitTests
 			{
 				"param1", "-a", "-b"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (param1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
+				1,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				2,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.AreEqual(
 				"param1",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 
-			// Act and Assert - Argument 2 (-a)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 
-			// Act and Assert - Argument 3 (-b)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve third argument.");
+				parser.Optionals.ContainsKey("Option 2"),
+				"Could not find Option 2 argument.");
+			ArgumentReference option2 = parser.Optionals["Option 2"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Third argument's type was not expected.");
-			Assert.AreEqual(
-				"b",
-				reader.Key,
-				"Third argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"Third argument values was not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option2.ReferenceCount,
+				"'Option 2' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -899,44 +798,33 @@ namespace UnitTests
 			{
 				"param1", "-a"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (param1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
+				1,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				1,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.AreEqual(
 				"param1",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 
-			// Act and Assert - Argument 2 (-a)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -947,46 +835,36 @@ namespace UnitTests
 			{
 				"-a", "param1"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (-a)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
-			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
 
-			// Act and Assert - Argument 2 (param1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
+				1,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				1,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.AreEqual(
 				"param1",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+			Assert.IsTrue(
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
+			Assert.AreEqual(
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 		}
 
+#if NOT_UPDATED
 		[Test]
 		public void ParseShortArrayValues()
 		{
@@ -1050,6 +928,7 @@ namespace UnitTests
 				reader.Read(),
 				"Retrieved argument when there should be no more.");
 		}
+#endif
 
 		[Test]
 		public void ParseShortBundling()
@@ -1059,44 +938,37 @@ namespace UnitTests
 			{
 				"-ab"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (-a)
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				2,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 
-			// Act and Assert - Argument 2 (-b)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+				parser.Optionals.ContainsKey("Option 2"),
+				"Could not find Option 2 argument.");
+			ArgumentReference option2 = parser.Optionals["Option 2"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
-			Assert.AreEqual(
-				"b",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option2.ReferenceCount,
+				"'Option 2' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -1107,62 +979,45 @@ namespace UnitTests
 			{
 				"-a", "param1", "-b"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (-a)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
-			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
 
-			// Act and Assert - Argument 2 (param1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
+				1,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				2,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.AreEqual(
 				"param1",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 
-			// Act and Assert - Argument 3 (-b)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve third argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Third argument's type was not expected.");
-			Assert.AreEqual(
-				"b",
-				reader.Key,
-				"Third argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"Third argument values was not expected.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+			Assert.IsTrue(
+				parser.Optionals.ContainsKey("Option 2"),
+				"Could not find Option 2 argument.");
+			ArgumentReference option2 = parser.Optionals["Option 2"];
+			Assert.AreEqual(
+				1,
+				option2.ReferenceCount,
+				"'Option 2' was seen an unexpected number of times.");
 		}
 
+#if NOT_UPDATED
 		[Test]
 		public void ParseShortWithSeparatedValue()
 		{
@@ -1242,6 +1097,7 @@ namespace UnitTests
 				reader.Read(),
 				"Retrieved argument when there should be no more.");
 		}
+#endif
 
 		[Test]
 		public void ParseSingleBlankArgument()
@@ -1251,28 +1107,24 @@ namespace UnitTests
 			{
 				""
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (--opt1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
+				1,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				0,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.AreEqual(
 				"",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 		}
 
 		[Test]
@@ -1283,28 +1135,28 @@ namespace UnitTests
 			{
 				"--opt1"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (--opt1)
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				1,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.LongOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"opt1",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -1315,28 +1167,24 @@ namespace UnitTests
 			{
 				"param1"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (--opt1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
+				1,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				0,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.AreEqual(
 				"param1",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 		}
 
 		[Test]
@@ -1347,28 +1195,28 @@ namespace UnitTests
 			{
 				"-a"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (-a)
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				1,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -1379,44 +1227,37 @@ namespace UnitTests
 			{
 				"--opt1", "--opt2"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (--opt1)
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				2,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.LongOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"opt1",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 
-			// Act and Assert - Argument 2 (--opt1)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+				parser.Optionals.ContainsKey("Option 2"),
+				"Could not find Option 2 argument.");
+			ArgumentReference option2 = parser.Optionals["Option 2"];
 			Assert.AreEqual(
-				ReaderArgumentType.LongOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
-			Assert.AreEqual(
-				"opt2",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option2.ReferenceCount,
+				"'Option 2' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -1427,44 +1268,28 @@ namespace UnitTests
 			{
 				"param1", "param2"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (--opt1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
+				2,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				0,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.AreEqual(
 				"param1",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
-
-			// Act and Assert - Argument 2 (--opt1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
-			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 			Assert.AreEqual(
 				"param2",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				parser.Parameters[1],
+				"Second parameter was not expected.");
 		}
 
 		[Test]
@@ -1475,44 +1300,37 @@ namespace UnitTests
 			{
 				"-a", "-b"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (-a)
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
+
+			// Assert
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				2,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 
-			// Act and Assert - Argument 2 (-b)
 			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+				parser.Optionals.ContainsKey("Option 2"),
+				"Could not find Option 2 argument.");
+			ArgumentReference option2 = parser.Optionals["Option 2"];
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
-			Assert.AreEqual(
-				"b",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
-
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+				1,
+				option2.ReferenceCount,
+				"'Option 2' was seen an unexpected number of times.");
 		}
 
 		[Test]
@@ -1523,61 +1341,42 @@ namespace UnitTests
 			{
 				"-a", "-b", "param1"
 			};
-			ArgumentReader reader = CreateParser(arguments);
 
-			// Act and Assert - Argument 1 (-a)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve first argument.");
-			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"First argument's type was not expected.");
-			Assert.AreEqual(
-				"a",
-				reader.Key,
-				"First argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"First argument's had values.");
+			// Act
+			ArgumentParser parser = CreateParser(arguments);
 
-			// Act and Assert - Argument 2 (-b)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve second argument.");
+			// Assert
 			Assert.AreEqual(
-				ReaderArgumentType.ShortOption,
-				reader.ReaderArgumentType,
-				"Second argument's type was not expected.");
+				1,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
 			Assert.AreEqual(
-				"b",
-				reader.Key,
-				"Second argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"second argument values was not expected.");
+				2,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
 
-			// Act and Assert - Argument 3 (param1)
-			Assert.IsTrue(
-				reader.Read(),
-				"Could not retrieve third argument.");
-			Assert.AreEqual(
-				ReaderArgumentType.Parameter,
-				reader.ReaderArgumentType,
-				"Third argument's type was not expected.");
 			Assert.AreEqual(
 				"param1",
-				reader.Key,
-				"Third argument's key was not expected.");
-			Assert.IsNull(
-				reader.Values,
-				"Third argument values was not expected.");
+				parser.Parameters[0],
+				"First parameter was not expected.");
 
-			// Final Act and Assert
-			Assert.IsFalse(
-				reader.Read(),
-				"Retrieved argument when there should be no more.");
+			Assert.IsTrue(
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
+			Assert.AreEqual(
+				1,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
+
+			Assert.IsTrue(
+				parser.Optionals.ContainsKey("Option 2"),
+				"Could not find Option 2 argument.");
+			ArgumentReference option2 = parser.Optionals["Option 2"];
+			Assert.AreEqual(
+				1,
+				option2.ReferenceCount,
+				"'Option 2' was seen an unexpected number of times.");
 		}
-#endif
 	}
 }

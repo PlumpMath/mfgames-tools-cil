@@ -95,9 +95,9 @@ namespace MfGames.Tools.Cli
 		{
 			// Start by finding the argument reference that this optional. This will
 			// either be a known argument or the key itself if one cannot be found.
-			string optionalKey = GetOptionalArgumentKey(reader.Key);
+			Argument argument = GetOptionalArgumentKey(reader.Key);
 
-			if (optionalKey == null)
+			if (argument == null)
 			{
 				// This was an unknown argument and we don't allow that. So break out
 				// if the function since there is nothing else we can do.
@@ -106,22 +106,25 @@ namespace MfGames.Tools.Cli
 
 			// See if we have an argument reference for this key already.
 			ArgumentReference reference;
-			bool found = optionals.TryGetValue(optionalKey,
+			bool found = optionals.TryGetValue(
+				argument.Key,
 				out reference);
 			
 			if (!found)
 			{
 				// We couldn't find it, so create a new one.
-				reference = new ArgumentReference(optionalKey);
-				optionals[optionalKey] = reference;
+				reference = new ArgumentReference(argument);
+				optionals[argument.Key] = reference;
 			}
 
 			// Increment the reference counter.
 			reference.ReferenceCount++;
+
+			// Check to see if we have a parameter associated with this argument.
 		}
 
 
-		private string GetOptionalArgumentKey(string key)
+		private Argument GetOptionalArgumentKey(string key)
 		{
 			// Look up the argument definitions inside the settings. If we can't find it,
 			// then just return the key since it is an unknown value.
@@ -133,25 +136,38 @@ namespace MfGames.Tools.Cli
 
 			if (found)
 			{
-				return argument.Key;
+				return argument;
 			}
+
+			// Create a placeholder argument for this one.
+			argument = CreatePlaceholderArgument(key);
 
 			// Check to see if the settings allow for unknown arguments.
 			if (settings.IncludeUnknownArguments)
 			{
-				// If we can't find it, then just return the key.
-				return key;
+				// If we can't find it, use the placeholder argument to represent the
+				// optional argument.
+				return argument;
 			}
 
 			// We have an unknown argument and they aren't allowed. Create an
 			// argument reference so we can report it and then add it to the unkown
 			// argument list. Then, we return null to indicate that this argument
 			// should be skipped.
-			var unknownReference = new ArgumentReference(key);
+			var unknownReference = new ArgumentReference(argument);
 
 			unknown.Add(unknownReference);
 
 			return null;
+		}
+
+		protected virtual Argument CreatePlaceholderArgument(string key)
+		{
+			var argument = new Argument
+			{
+				Key = key
+			};
+			return argument;
 		}
 
 		public int ParameterCount
