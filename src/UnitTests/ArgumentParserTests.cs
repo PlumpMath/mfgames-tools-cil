@@ -39,26 +39,24 @@ namespace UnitTests
 			ArgumentParser parser = CreateParser(arguments);
 
 			// Assert
-			//Assert.AreEqual(
-			//	0,
-			//	parser.ParameterCount,
-			//	"There was an unexpected number of parameter arguments.");
-			//Assert.AreEqual(
-			//	1,
-			//	parser.OptionalCount,
-			//	"There were an unexpected number of optional arguments.");
+			Assert.AreEqual(
+				0,
+				parser.ParameterCount,
+				"There was an unexpected number of parameter arguments.");
+			Assert.AreEqual(
+				1,
+				parser.OptionalCount,
+				"There were an unexpected number of optional arguments.");
+			
+			Assert.IsTrue(
+				parser.Optionals.ContainsKey("Option 1"),
+				"Could not find Option 1 argument.");
 
-			//Assert.IsTrue(
-			//	parser.Optional.Contains("Option 1"),
-			//	"Count not find 'Option 1' in arguments.");
-			//Assert.AreEqual(
-			//	2,
-			//	parser.Optional["Option 1"].ReferenceCount,
-			//	"'Option 1' was seen an unexpected number of times.");
-			//Assert.AreEqual(
-			//	2,
-			//	parser.Optional["Option 1"].GetValue<int>(),
-			//	"'Option 1' had an unexpected value.");
+			ArgumentReference option1 = parser.Optionals["Option 1"];
+			Assert.AreEqual(
+				2,
+				option1.ReferenceCount,
+				"'Option 1' was seen an unexpected number of times.");
 		}
 
 #if NOT_UPDATED

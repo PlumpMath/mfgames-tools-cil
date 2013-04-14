@@ -88,6 +88,15 @@ namespace MfGames.Tools.Cli
 		protected string ShortOptionPrefix { get; set; }
 
 		/// <summary>
+		/// Gets or sets a value indicating whether unknown arguments will be
+		/// managed by the ArgumentParser.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if to include unknown arguments in the parser; otherwise, <c>false</c>.
+		/// </value>
+		public bool IncludeUnknownArguments { get; set; }
+
+		/// <summary>
 		/// Parses the argument as a long option. If this is not a valid string, this
 		/// returns null. Otherwise, it returns the long option without any option prefix
 		/// but including assignment (e.g., "assets=bob").

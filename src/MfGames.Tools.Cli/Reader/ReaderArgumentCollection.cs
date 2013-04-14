@@ -7,13 +7,36 @@ namespace MfGames.Tools.Cli.Reader
 	/// methods.
 	/// </summary>
 	public class ReaderArgumentCollection:
-		List<IReaderArgument>
+		List<Argument>
 	{
-		public IReaderArgument this[string name]
+		public bool TryGet(
+			string name,
+			out Argument argument)
+		{
+			// Go through the collection of arguments and look for an argument that
+			// has this key in the long or short names.
+			foreach (Argument readerArgument in this)
+			{
+				bool isLongOption = readerArgument.LongOptionNames.Contains(name);
+				bool isShortOption = readerArgument.ShortOptionNames.Contains(name);
+
+				if (isLongOption || isShortOption)
+				{
+					argument = readerArgument;
+					return true;
+				}
+			}
+
+			// If we got out of the loop, we couldn't find it.
+			argument = null;
+			return false;
+		}
+
+		public Argument this[string name]
 		{
 			get
 			{
-				foreach (IReaderArgument argument in this)
+				foreach (Argument argument in this)
 				{
 					if (argument.LongOptionNames.Contains(name) ||
 						argument.ShortOptionNames.Contains(name))

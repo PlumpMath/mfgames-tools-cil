@@ -42,11 +42,11 @@
     <Compile Include="Argument.cs" />
     <Compile Include="ArgumentParser.cs" />
     <Compile Include="ArgumentReader.cs" />
+    <Compile Include="ArgumentReference.cs" />
     <Compile Include="Reader\ReaderArgumentCollection.cs" />
     <Compile Include="ArgumentSettings.cs" />
     <Compile Include="Reader\ReaderArgumentType.cs" />
     <Compile Include="GetOptArgumentSettings.cs" />
-    <Compile Include="Reader\IReaderArgument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

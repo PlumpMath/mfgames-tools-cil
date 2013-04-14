@@ -6,7 +6,7 @@ namespace MfGames.Tools.Cli
 	/// <summary>
 	/// Describes a single argument that can be processed or read.
 	/// </summary>
-	public class Argument: IReaderArgument
+	public class Argument
 	{
 		public string Key { get; set; }
 		public int ValueCount { get; set; }

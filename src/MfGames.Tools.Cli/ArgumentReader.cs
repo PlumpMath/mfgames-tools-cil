@@ -169,7 +169,7 @@ namespace MfGames.Tools.Cli
 
 			// Using the key, pull out the definition of the argument. If there is none,
 			// them create a default argument.
-			IReaderArgument definition = settings.Arguments[Key];
+			Argument definition = settings.Arguments[Key];
 
 			// If the definition requires values, we need to populate them.
 			if (definition.ValueCount > 0)
@@ -219,7 +219,7 @@ namespace MfGames.Tools.Cli
 
 			// Using the key, pull out the definition of the argument. If there is none,
 			// them create a default argument.
-			IReaderArgument definition = settings.Arguments[Key];
+			Argument definition = settings.Arguments[Key];
 
 			// If the definition requires values, we need to populate them.
 			if (definition.ValueCount > 0)
