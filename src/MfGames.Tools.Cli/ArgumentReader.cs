@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
+using System;
 using System.Collections.Generic;
 using MfGames.Tools.Cli.Reader;
 
@@ -12,14 +17,23 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class ArgumentReader
 	{
+		private readonly string[] arguments;
 		private readonly ArgumentSettings settings;
+
+		/// <summary>
+		/// The short options currently being processed.
+		/// </summary>
+		private string currentShortOptions;
 
 		/// <summary>
 		/// Contains the index into arguments array for the current position.
 		/// </summary>
 		private int nextArgumentIndex;
 
-		private string[] arguments;
+		/// <summary>
+		/// If this is set, then option processing will be suspended.
+		/// </summary>
+		private bool stopProcessing;
 
 		public ArgumentReader(
 			ArgumentSettings settings,
@@ -147,7 +161,7 @@ namespace MfGames.Tools.Cli
 			ReaderArgumentType = ReaderArgumentType.Parameter;
 			Key = argument;
 			nextArgumentIndex++;
-			
+
 			return true;
 		}
 
@@ -278,15 +292,5 @@ namespace MfGames.Tools.Cli
 			string argument = arguments[nextArgumentIndex];
 			return argument;
 		}
-
-		/// <summary>
-		/// If this is set, then option processing will be suspended.
-		/// </summary>
-		private bool stopProcessing;
-
-		/// <summary>
-		/// The short options currently being processed.
-		/// </summary>
-		private string currentShortOptions;
 	}
 }

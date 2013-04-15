@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
+using System.Collections.Generic;
 using MfGames.Tools.Cli;
 
 namespace UnitTests

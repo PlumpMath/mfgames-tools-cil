@@ -1,4 +1,9 @@
-﻿namespace MfGames.Tools.Cli.Reader
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
+namespace MfGames.Tools.Cli.Reader
 {
 	/// <summary>
 	/// Enumeration that describes the current type of argument in the reader.

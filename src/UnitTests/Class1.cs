@@ -1,4 +1,9 @@
-﻿using System.ComponentModel;
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
+using System.ComponentModel;
 using MfGames.Tools;
 
 namespace UnitTests
@@ -9,8 +14,7 @@ namespace UnitTests
 	{
 		[ToolConstructor]
 		public Class1(
-			[ToolParameterAlias("required-int")]
-			int requiredIntegerParameter)
+			[ToolParameterAlias("required-int")] int requiredIntegerParameter)
 		{
 		}
 

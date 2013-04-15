@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
+using System.Collections.Generic;
 
 namespace MfGames.Tools.Cli
 {
@@ -17,18 +22,6 @@ namespace MfGames.Tools.Cli
 		public Argument Argument { get; private set; }
 		public int ReferenceCount { get; set; }
 
-		public void AddValues(List<string> values)
-		{
-			// Make sure we have the collection of values.
-			if (Values == null)
-			{
-				Values = new List<List<string>>();
-			}
-
-			// Append the values to the list.
-			Values.Add(values);
-		}
-
 		public string Value
 		{
 			get { return Values[0][0]; }
@@ -40,5 +33,17 @@ namespace MfGames.Tools.Cli
 		}
 
 		public List<List<string>> Values { get; private set; }
+
+		public void AddValues(List<string> values)
+		{
+			// Make sure we have the collection of values.
+			if (Values == null)
+			{
+				Values = new List<List<string>>();
+			}
+
+			// Append the values to the list.
+			Values.Add(values);
+		}
 	}
 }

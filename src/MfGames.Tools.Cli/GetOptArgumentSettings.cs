@@ -1,4 +1,9 @@
-﻿namespace MfGames.Tools.Cli
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
+namespace MfGames.Tools.Cli
 {
 	/// <summary>
 	/// A convinence settings object that includes the default settings for a GNU
@@ -21,7 +26,7 @@
 	/// argument allows for singular or multiple values, if it is considered a short or long argument,
 	/// and if it is counted.
 	/// </summary>
-	public class GetOptArgumentSettings : ArgumentSettings
+	public class GetOptArgumentSettings: ArgumentSettings
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GetOptArgumentSettings"/> class.

@@ -1,4 +1,9 @@
-﻿using System.Collections.Generic;
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
+using System.Collections.Generic;
 
 namespace MfGames.Tools.Cli.Reader
 {
@@ -9,6 +14,23 @@ namespace MfGames.Tools.Cli.Reader
 	public class ReaderArgumentCollection:
 		List<Argument>
 	{
+		public Argument this[string name]
+		{
+			get
+			{
+				foreach (Argument argument in this)
+				{
+					if (argument.LongOptionNames.Contains(name) ||
+						argument.ShortOptionNames.Contains(name))
+					{
+						return argument;
+					}
+				}
+
+				return new Argument();
+			}
+		}
+
 		public bool TryGet(
 			string name,
 			out Argument argument)
@@ -30,23 +52,6 @@ namespace MfGames.Tools.Cli.Reader
 			// If we got out of the loop, we couldn't find it.
 			argument = null;
 			return false;
-		}
-
-		public Argument this[string name]
-		{
-			get
-			{
-				foreach (Argument argument in this)
-				{
-					if (argument.LongOptionNames.Contains(name) ||
-						argument.ShortOptionNames.Contains(name))
-					{
-						return argument;
-					}
-				}
-
-				return new Argument();
-			}
 		}
 	}
 }

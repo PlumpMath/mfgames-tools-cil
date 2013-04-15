@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
 using MfGames.Tools.Cli;
 using NUnit.Framework;
 
@@ -82,9 +86,9 @@ namespace UnitTests
 				"There were an unexpected number of optional arguments.");
 
 			Assert.AreEqual(
-	"param1",
-	parser.Parameters[0],
-	"First parameter was not expected.");
+				"param1",
+				parser.Parameters[0],
+				"First parameter was not expected.");
 
 			Assert.IsTrue(
 				parser.Optionals.ContainsKey("Option 1"),
@@ -490,8 +494,8 @@ namespace UnitTests
 				"'Option 1' was seen an unexpected number of times.");
 
 			Assert.IsTrue(
-			parser.Optionals.ContainsKey("Dual"),
-			"Could not find 'Dual' argument.");
+				parser.Optionals.ContainsKey("Dual"),
+				"Could not find 'Dual' argument.");
 			ArgumentReference dual = parser.Optionals["Dual"];
 			Assert.AreEqual(
 				1,
@@ -559,8 +563,8 @@ namespace UnitTests
 				"'Option 1' was seen an unexpected number of times.");
 
 			Assert.IsTrue(
-			parser.Optionals.ContainsKey("Dual"),
-			"Could not find 'Dual' argument.");
+				parser.Optionals.ContainsKey("Dual"),
+				"Could not find 'Dual' argument.");
 			ArgumentReference dual = parser.Optionals["Dual"];
 			Assert.AreEqual(
 				1,

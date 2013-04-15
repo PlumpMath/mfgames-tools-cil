@@ -1,4 +1,9 @@
-﻿using System;
+﻿// Copyright 2013 Moonfire Games
+// 
+// Released under the MIT license
+// http://mfgames.com/mfgames-tools-cil/license
+
+using System;
 using System.Collections.Generic;
 using MfGames.Tools.Cli.Reader;
 
@@ -20,8 +25,11 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class ArgumentParser
 	{
-		private string[] arguments;
-		private ArgumentSettings settings;
+		private readonly string[] arguments;
+		private readonly Dictionary<string, ArgumentReference> optionals;
+		private readonly List<string> parameters;
+		private readonly ArgumentSettings settings;
+		private readonly List<ArgumentReference> unknown;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ArgumentParser"/> class.
@@ -63,6 +71,26 @@ namespace MfGames.Tools.Cli
 			{
 				Parse();
 			}
+		}
+
+		public int ParameterCount
+		{
+			get { return parameters.Count; }
+		}
+
+		public int OptionalCount
+		{
+			get { return optionals.Count; }
+		}
+
+		public List<string> Parameters
+		{
+			get { return parameters; }
+		}
+
+		public Dictionary<string, ArgumentReference> Optionals
+		{
+			get { return optionals; }
 		}
 
 		public void Parse()
@@ -128,7 +156,6 @@ namespace MfGames.Tools.Cli
 			}
 		}
 
-
 		private Argument GetOptionalArgumentKey(string key)
 		{
 			// Look up the argument definitions inside the settings. If we can't find it,
@@ -174,29 +201,5 @@ namespace MfGames.Tools.Cli
 			};
 			return argument;
 		}
-
-		public int ParameterCount
-		{
-			get { return parameters.Count; }
-		}
-
-		public int OptionalCount
-		{
-			get { return optionals.Count; }
-		}
-
-		public List<string> Parameters
-		{
-			get { return parameters; }
-		}
-
-		public Dictionary<string, ArgumentReference> Optionals
-		{
-			get { return optionals; }
-		}
-
-		private List<string> parameters;
-		private Dictionary<string, ArgumentReference> optionals;
-		private List<ArgumentReference> unknown;
 	}
 }
