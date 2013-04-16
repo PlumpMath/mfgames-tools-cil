@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -18,6 +19,8 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class ArgumentSettings
 	{
+		#region Constructors
+
 		/// <summary>
 		/// Prevents a default instance of the <see cref="ArgumentSettings"/> class from being created.
 		/// </summary>
@@ -26,80 +29,9 @@ namespace MfGames.Tools.Cli
 			Arguments = new ReaderArgumentCollection();
 		}
 
-		/// <summary>
-		/// Gets or sets the stop processing argument. This is the value of a single
-		/// argument that indicates that all arguments after this point are automatically
-		/// a parameter and that no additional processing should take place.
-		/// 
-		/// When this argument is removed the first time it is encountered in a string.
-		/// </summary>
-		public string StopProcessingArgument { get; set; }
+		#endregion
 
-		/// <summary>
-		/// Gets the specific argument settings.
-		/// </summary>
-		public ReaderArgumentCollection Arguments { get; private set; }
-
-		/// <summary>
-		/// Gets a value indicating whether these settings allow for long options.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if this instance has long options; otherwise, <c>false</c>.
-		/// </value>
-		public bool HasLongOptions
-		{
-			get { return !string.IsNullOrEmpty(LongOptionPrefix); }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether these settings allow for long option
-		/// assignment.
-		/// </summary>
-		public bool HasLongOptionAssignment
-		{
-			get { return !string.IsNullOrEmpty(LongOptionAssignment); }
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether these settings allow for short options.
-		/// </summary>
-		public bool HasShortOptions
-		{
-			get { return !string.IsNullOrEmpty(ShortOptionPrefix); }
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether short options can be bundled together.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if short options can be bundled; otherwise, <c>false</c>.
-		/// </value>
-		public bool AllowShortOptionBundling { get; set; }
-
-		/// <summary>
-		/// Gets or sets the prefix string which indicates a long option.
-		/// </summary>
-		public string LongOptionPrefix { get; set; }
-
-		/// <summary>
-		/// Gets or sets the long option assignment string, this is what identifies an
-		/// assignment operator.
-		/// </summary>
-		public string LongOptionAssignment { get; set; }
-
-		/// <summary>
-		/// Gets or sets the prefix string which indicates a short option.
-		/// </summary>
-		protected string ShortOptionPrefix { get; set; }
-
-		/// <summary>
-		/// Gets or sets a value indicating whether unknown arguments will be
-		/// managed by the ArgumentParser.
-		/// </summary>
-		/// <value>
-		/// <c>true</c> if to include unknown arguments in the parser; otherwise, <c>false</c>.
-		/// </value>
-		public bool IncludeUnknownArguments { get; set; }
+		#region Methods
 
 		/// <summary>
 		/// Parses the argument as a long option. If this is not a valid string, this
@@ -201,5 +133,86 @@ namespace MfGames.Tools.Cli
 
 			return false;
 		}
+
+		#endregion
+
+		#region Fields and Properties
+
+		/// <summary>
+		/// Gets or sets a value indicating whether short options can be bundled together.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if short options can be bundled; otherwise, <c>false</c>.
+		/// </value>
+		public bool AllowShortOptionBundling { get; set; }
+
+		/// <summary>
+		/// Gets the specific argument settings.
+		/// </summary>
+		public ReaderArgumentCollection Arguments { get; private set; }
+
+		/// <summary>
+		/// Gets a value indicating whether these settings allow for long option
+		/// assignment.
+		/// </summary>
+		public bool HasLongOptionAssignment
+		{
+			get { return !string.IsNullOrEmpty(LongOptionAssignment); }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether these settings allow for long options.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if this instance has long options; otherwise, <c>false</c>.
+		/// </value>
+		public bool HasLongOptions
+		{
+			get { return !string.IsNullOrEmpty(LongOptionPrefix); }
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether these settings allow for short options.
+		/// </summary>
+		public bool HasShortOptions
+		{
+			get { return !string.IsNullOrEmpty(ShortOptionPrefix); }
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether unknown arguments will be
+		/// managed by the ArgumentParser.
+		/// </summary>
+		/// <value>
+		/// <c>true</c> if to include unknown arguments in the parser; otherwise, <c>false</c>.
+		/// </value>
+		public bool IncludeUnknownArguments { get; set; }
+
+		/// <summary>
+		/// Gets or sets the long option assignment string, this is what identifies an
+		/// assignment operator.
+		/// </summary>
+		public string LongOptionAssignment { get; set; }
+
+		/// <summary>
+		/// Gets or sets the prefix string which indicates a long option.
+		/// </summary>
+		public string LongOptionPrefix { get; set; }
+
+		/// <summary>
+		/// Gets or sets the stop processing argument. This is the value of a single
+		/// argument that indicates that all arguments after this point are automatically
+		/// a parameter and that no additional processing should take place.
+		/// 
+		/// When this argument is removed the first time it is encountered in a string.
+		/// </summary>
+		public string StopProcessingArgument { get; set; }
+
+		/// <summary>
+		/// Gets or sets the prefix string which indicates a short option.
+		/// </summary>
+		protected string ShortOptionPrefix { get; set; }
+
+		#endregion
 	}
 }

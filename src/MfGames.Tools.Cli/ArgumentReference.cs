@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -14,25 +15,16 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class ArgumentReference
 	{
+		#region Constructors
+
 		public ArgumentReference(Argument argument)
 		{
 			Argument = argument;
 		}
 
-		public Argument Argument { get; private set; }
-		public int ReferenceCount { get; set; }
+		#endregion
 
-		public string Value
-		{
-			get { return Values[0][0]; }
-		}
-
-		public bool HasValues
-		{
-			get { return Values != null; }
-		}
-
-		public List<List<string>> Values { get; private set; }
+		#region Methods
 
 		public void AddValues(List<string> values)
 		{
@@ -45,5 +37,27 @@ namespace MfGames.Tools.Cli
 			// Append the values to the list.
 			Values.Add(values);
 		}
+
+		#endregion
+
+		#region Fields and Properties
+
+		public Argument Argument { get; private set; }
+
+		public bool HasValues
+		{
+			get { return Values != null; }
+		}
+
+		public int ReferenceCount { get; set; }
+
+		public string Value
+		{
+			get { return Values[0][0]; }
+		}
+
+		public List<List<string>> Values { get; private set; }
+
+		#endregion
 	}
 }

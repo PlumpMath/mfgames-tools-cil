@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -11,24 +12,7 @@ namespace UnitTests
 	[TestFixture]
 	public class ArgumentParserTests: ArgumentTestBase
 	{
-		/// <summary>
-		/// Creates the CLI argument reader with standard arguments set up.
-		/// 
-		/// <list type="bullet">
-		/// <item>-t, --array: Takes a single value</item>
-		/// <item>-d, --dual: Takes two values</item>
-		/// </list>
-		/// </summary>
-		/// <param name="arguments">The string arguments.</param>
-		/// <returns>An ArgumentReader with the arguments set up.</returns>
-		private ArgumentParser CreateParser(string[] arguments)
-		{
-			ArgumentSettings settings = CreateCommonSettings();
-			var reader = new ArgumentParser(
-				settings,
-				arguments);
-			return reader;
-		}
+		#region Tests
 
 		[Test]
 		public void CountTwoShorts()
@@ -1418,5 +1402,30 @@ namespace UnitTests
 				option2.ReferenceCount,
 				"'Option 2' was seen an unexpected number of times.");
 		}
+
+		#endregion
+
+		#region Support
+
+		/// <summary>
+		/// Creates the CLI argument reader with standard arguments set up.
+		/// 
+		/// <list type="bullet">
+		/// <item>-t, --array: Takes a single value</item>
+		/// <item>-d, --dual: Takes two values</item>
+		/// </list>
+		/// </summary>
+		/// <param name="arguments">The string arguments.</param>
+		/// <returns>An ArgumentReader with the arguments set up.</returns>
+		private ArgumentParser CreateParser(string[] arguments)
+		{
+			ArgumentSettings settings = CreateCommonSettings();
+			var reader = new ArgumentParser(
+				settings,
+				arguments);
+			return reader;
+		}
+
+		#endregion
 	}
 }

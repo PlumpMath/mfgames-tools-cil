@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -28,6 +29,8 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class GetOptArgumentSettings: ArgumentSettings
 	{
+		#region Constructors
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GetOptArgumentSettings"/> class.
 		/// </summary>
@@ -44,5 +47,7 @@ namespace MfGames.Tools.Cli
 			AllowShortOptionBundling = true;
 			ShortOptionPrefix = "-";
 		}
+
+		#endregion
 	}
 }

@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -17,23 +18,7 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class ArgumentReader
 	{
-		private readonly string[] arguments;
-		private readonly ArgumentSettings settings;
-
-		/// <summary>
-		/// The short options currently being processed.
-		/// </summary>
-		private string currentShortOptions;
-
-		/// <summary>
-		/// Contains the index into arguments array for the current position.
-		/// </summary>
-		private int nextArgumentIndex;
-
-		/// <summary>
-		/// If this is set, then option processing will be suspended.
-		/// </summary>
-		private bool stopProcessing;
+		#region Constructors
 
 		public ArgumentReader(
 			ArgumentSettings settings,
@@ -55,32 +40,9 @@ namespace MfGames.Tools.Cli
 			this.arguments = arguments;
 		}
 
-		/// <summary>
-		/// Gets the key for the current argument. This will be the name of the option
-		/// or the value of the parameter.
-		/// </summary>
-		public string Key { get; private set; }
+		#endregion
 
-		/// <summary>
-		/// Gets the values parsed with the current argument. If there are no values,
-		/// this will be null.
-		/// </summary>
-		public List<string> Values { get; private set; }
-
-		/// <summary>
-		/// Gets the type of the current argument.
-		/// </summary>
-		public ReaderArgumentType ReaderArgumentType { get; private set; }
-
-		/// <summary>
-		/// Resets the various fields to a netural state for populating.
-		/// </summary>
-		private void Reset()
-		{
-			Key = null;
-			Values = null;
-			ReaderArgumentType = ReaderArgumentType.None;
-		}
+		#region Methods
 
 		/// <summary>
 		/// Reads the next argument component and sets the internal state to describe
@@ -163,6 +125,26 @@ namespace MfGames.Tools.Cli
 			nextArgumentIndex++;
 
 			return true;
+		}
+
+		/// <summary>
+		/// Gets the next argument.
+		/// </summary>
+		/// <returns></returns>
+		private string GetNextArgument()
+		{
+			// Find out if the next processed argument is out of bounds. We don't advance
+			// the pointers because it is dependent on the state (bundled short options
+			// advance in a different manner than the rest).
+			if (nextArgumentIndex >= arguments.Length)
+			{
+				// No more arguments to process.
+				return null;
+			}
+
+			// Grab the value we'll be processing.
+			string argument = arguments[nextArgumentIndex];
+			return argument;
 		}
 
 		/// <summary>
@@ -274,23 +256,55 @@ namespace MfGames.Tools.Cli
 		}
 
 		/// <summary>
-		/// Gets the next argument.
+		/// Resets the various fields to a netural state for populating.
 		/// </summary>
-		/// <returns></returns>
-		private string GetNextArgument()
+		private void Reset()
 		{
-			// Find out if the next processed argument is out of bounds. We don't advance
-			// the pointers because it is dependent on the state (bundled short options
-			// advance in a different manner than the rest).
-			if (nextArgumentIndex >= arguments.Length)
-			{
-				// No more arguments to process.
-				return null;
-			}
-
-			// Grab the value we'll be processing.
-			string argument = arguments[nextArgumentIndex];
-			return argument;
+			Key = null;
+			Values = null;
+			ReaderArgumentType = ReaderArgumentType.None;
 		}
+
+		#endregion
+
+		#region Fields and Properties
+
+		/// <summary>
+		/// Gets the key for the current argument. This will be the name of the option
+		/// or the value of the parameter.
+		/// </summary>
+		public string Key { get; private set; }
+
+		/// <summary>
+		/// Gets the type of the current argument.
+		/// </summary>
+		public ReaderArgumentType ReaderArgumentType { get; private set; }
+
+		/// <summary>
+		/// Gets the values parsed with the current argument. If there are no values,
+		/// this will be null.
+		/// </summary>
+		public List<string> Values { get; private set; }
+
+		private readonly string[] arguments;
+
+		/// <summary>
+		/// The short options currently being processed.
+		/// </summary>
+		private string currentShortOptions;
+
+		/// <summary>
+		/// Contains the index into arguments array for the current position.
+		/// </summary>
+		private int nextArgumentIndex;
+
+		private readonly ArgumentSettings settings;
+
+		/// <summary>
+		/// If this is set, then option processing will be suspended.
+		/// </summary>
+		private bool stopProcessing;
+
+		#endregion
 	}
 }

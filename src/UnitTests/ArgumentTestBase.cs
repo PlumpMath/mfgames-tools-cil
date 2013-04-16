@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -10,6 +11,8 @@ namespace UnitTests
 {
 	public class ArgumentTestBase
 	{
+		#region Methods
+
 		/// <summary>
 		/// Creates the common settings with various arguments populated.
 		/// </summary>
@@ -77,5 +80,7 @@ namespace UnitTests
 			// Return the resulting settings.
 			return settings;
 		}
+
+		#endregion
 	}
 }

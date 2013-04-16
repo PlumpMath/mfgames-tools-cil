@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -25,11 +26,7 @@ namespace MfGames.Tools.Cli
 	/// </summary>
 	public class ArgumentParser
 	{
-		private readonly string[] arguments;
-		private readonly Dictionary<string, ArgumentReference> optionals;
-		private readonly List<string> parameters;
-		private readonly ArgumentSettings settings;
-		private readonly List<ArgumentReference> unknown;
+		#region Constructors
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="ArgumentParser"/> class.
@@ -73,25 +70,9 @@ namespace MfGames.Tools.Cli
 			}
 		}
 
-		public int ParameterCount
-		{
-			get { return parameters.Count; }
-		}
+		#endregion
 
-		public int OptionalCount
-		{
-			get { return optionals.Count; }
-		}
-
-		public List<string> Parameters
-		{
-			get { return parameters; }
-		}
-
-		public Dictionary<string, ArgumentReference> Optionals
-		{
-			get { return optionals; }
-		}
+		#region Methods
 
 		public void Parse()
 		{
@@ -119,41 +100,13 @@ namespace MfGames.Tools.Cli
 			}
 		}
 
-		private void ParseOptionalArgument(ArgumentReader reader)
+		protected virtual Argument CreatePlaceholderArgument(string key)
 		{
-			// Start by finding the argument reference that this optional. This will
-			// either be a known argument or the key itself if one cannot be found.
-			Argument argument = GetOptionalArgumentKey(reader.Key);
-
-			if (argument == null)
+			var argument = new Argument
 			{
-				// This was an unknown argument and we don't allow that. So break out
-				// if the function since there is nothing else we can do.
-				return;
-			}
-
-			// See if we have an argument reference for this key already.
-			ArgumentReference reference;
-			bool found = optionals.TryGetValue(
-				argument.Key,
-				out reference);
-
-			if (!found)
-			{
-				// We couldn't find it, so create a new one.
-				reference = new ArgumentReference(argument);
-				optionals[argument.Key] = reference;
-			}
-
-			// Increment the reference counter.
-			reference.ReferenceCount++;
-
-			// Check to see if we have a value associated with this argument.
-			if (reader.Values != null)
-			{
-				// Add the values to the reference.
-				reference.AddValues(reader.Values);
-			}
+				Key = key
+			};
+			return argument;
 		}
 
 		private Argument GetOptionalArgumentKey(string key)
@@ -193,13 +146,73 @@ namespace MfGames.Tools.Cli
 			return null;
 		}
 
-		protected virtual Argument CreatePlaceholderArgument(string key)
+		private void ParseOptionalArgument(ArgumentReader reader)
 		{
-			var argument = new Argument
+			// Start by finding the argument reference that this optional. This will
+			// either be a known argument or the key itself if one cannot be found.
+			Argument argument = GetOptionalArgumentKey(reader.Key);
+
+			if (argument == null)
 			{
-				Key = key
-			};
-			return argument;
+				// This was an unknown argument and we don't allow that. So break out
+				// if the function since there is nothing else we can do.
+				return;
+			}
+
+			// See if we have an argument reference for this key already.
+			ArgumentReference reference;
+			bool found = optionals.TryGetValue(
+				argument.Key,
+				out reference);
+
+			if (!found)
+			{
+				// We couldn't find it, so create a new one.
+				reference = new ArgumentReference(argument);
+				optionals[argument.Key] = reference;
+			}
+
+			// Increment the reference counter.
+			reference.ReferenceCount++;
+
+			// Check to see if we have a value associated with this argument.
+			if (reader.Values != null)
+			{
+				// Add the values to the reference.
+				reference.AddValues(reader.Values);
+			}
 		}
+
+		#endregion
+
+		#region Fields and Properties
+
+		public int OptionalCount
+		{
+			get { return optionals.Count; }
+		}
+
+		public Dictionary<string, ArgumentReference> Optionals
+		{
+			get { return optionals; }
+		}
+
+		public int ParameterCount
+		{
+			get { return parameters.Count; }
+		}
+
+		public List<string> Parameters
+		{
+			get { return parameters; }
+		}
+
+		private readonly string[] arguments;
+		private readonly Dictionary<string, ArgumentReference> optionals;
+		private readonly List<string> parameters;
+		private readonly ArgumentSettings settings;
+		private readonly List<ArgumentReference> unknown;
+
+		#endregion
 	}
 }

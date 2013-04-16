@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -14,22 +15,7 @@ namespace MfGames.Tools.Cli.Reader
 	public class ReaderArgumentCollection:
 		List<Argument>
 	{
-		public Argument this[string name]
-		{
-			get
-			{
-				foreach (Argument argument in this)
-				{
-					if (argument.LongOptionNames.Contains(name) ||
-						argument.ShortOptionNames.Contains(name))
-					{
-						return argument;
-					}
-				}
-
-				return new Argument();
-			}
-		}
+		#region Methods
 
 		public bool TryGet(
 			string name,
@@ -53,5 +39,28 @@ namespace MfGames.Tools.Cli.Reader
 			argument = null;
 			return false;
 		}
+
+		#endregion
+
+		#region Fields and Properties
+
+		public Argument this[string name]
+		{
+			get
+			{
+				foreach (Argument argument in this)
+				{
+					if (argument.LongOptionNames.Contains(name) ||
+						argument.ShortOptionNames.Contains(name))
+					{
+						return argument;
+					}
+				}
+
+				return new Argument();
+			}
+		}
+
+		#endregion
 	}
 }

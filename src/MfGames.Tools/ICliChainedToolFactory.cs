@@ -1,5 +1,6 @@
-﻿// Copyright 2013 Moonfire Games
+﻿// MfGames Tools CIL
 // 
+// Copyright 2013 Moonfire Games
 // Released under the MIT license
 // http://mfgames.com/mfgames-tools-cil/license
 
@@ -33,6 +34,8 @@ namespace MfGames.Tools
 	/// </summary>
 	public interface ICliChainedToolFactory
 	{
+		#region Methods
+
 		/// <summary>
 		/// Returns the type that a chained tool should be reparsed with the arguments
 		/// and processed as if that was the tool passed into the CliToolFactory.
@@ -40,5 +43,7 @@ namespace MfGames.Tools
 		/// <returns>A Type that should be instantianted as a chained tool or null to
 		/// indicate there is no chained tool.</returns>
 		Type CreateChainedToolType();
+
+		#endregion
 	}
 }
